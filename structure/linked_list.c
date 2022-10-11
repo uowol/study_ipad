@@ -46,7 +46,7 @@ void insertLast(ListType *L, element e) {
 }
 
 void insert(ListType *L, int pos, element e) {
-    if (pos == 0){
+    if (pos == 1){
         insertFirst(L, e);
         return;
     }
@@ -54,7 +54,7 @@ void insert(ListType *L, int pos, element e) {
     ListNode *node = (ListNode*)malloc(sizeof(ListNode));
     ListNode *p = L->head; 
     
-    for(int i=0; i<pos-1; i++) p = p->link;
+    for(int i=1; i<pos-1; i++) p = p->link;
 
     node->data = e;
     node->link = p->link;
@@ -76,7 +76,58 @@ void print(ListType *L) {
     printf("NULL\n");
 }
 
+element deleteFirst(ListType *L){
+    ListNode *p = L->head;
+    element e = p->data;
+    L->head = p->link;
+    free(p);
+    
+    return e;
+}
 
+element delete(ListType *L, int pos){
+    ListNode *p = L->head;
+    ListNode *prev;
+    element e;
+    
+    if(pos == 1){
+        e = deleteFirst(L);
+    }else{
+        for(int i=0; i<pos -1; i++){
+            prev = p;
+            p = p->link;
+        }
+        e = p->data;
+        prev->link = p->link;
+        free(p);
+    }
+    
+    return e;
+}
+
+void partition(ListType *L, ListType *L1, ListType *L2, int pos){
+    ListNode *p = L->head;
+
+    L1->head = p;
+    for(int i=1; i<pos; i++){
+        p = p->link;
+    }
+
+    L2->head = p->link;
+
+    p->link = NULL;
+}
+
+ListType* concat(ListType *L1, ListType *L2){
+    ListNode *p = L1->head;
+    ListNode *q = L2->head;
+    if(p == NULL){
+        p = q;
+    } else{
+        for(; p->link != NULL; p=p->link);
+        p->link = q;
+    }
+}
 
 int main() {
     ListType L;
@@ -89,12 +140,34 @@ int main() {
     insertLast(&L, 40); print(&L);
     insertLast(&L, 50); print(&L);
 
-    insert(&L, 0, 60); print(&L);
+    insert(&L, 1, 60); print(&L);
     insert(&L, 4, 70); print(&L);
+    
+    printf("[%d] is deleted. \n", deleteFirst(&L));
+    print(&L);
+    printf("[%d] is deleted. \n", delete(&L, 3));
+    print(&L);
+    
+    ListType L1, L2;
+    init(&L1); init(&L2);
+    int pos;
+    
+    printf("Enter partition pos : ");
+    scanf("%d", &pos);
+    
+    partition(&L, &L1, &L2, pos);
+    
+    print(&L1);
+    print(&L2);
+    
+    printf("After concat. \n");
+
+    concat(&L1, &L2);
+    
+    print(&L1);
 
     return 0;
 }
-
 
 
 
