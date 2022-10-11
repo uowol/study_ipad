@@ -1,4 +1,4 @@
-nclude <stdio.h>
+#include <stdio.h>
 #include <stdlib.h>
 
 
@@ -43,13 +43,13 @@ void insertFirst(ListType *L, element e){
 void insertLast(ListType *L, element e) {
     ListNode *node = (ListNode*)malloc(sizeof(ListNode));
     node->data = e;
-    node->link = (L->tail)->link;
 
     if(L->tail == NULL){
         L->tail = node;
         node->link = L->tail;
     }
     else{
+        node->link = L->tail->link;
         L->tail->link = node;
         L->tail = node;
     }
@@ -63,16 +63,16 @@ void print(ListType *L) {
         printf("[%d] ", p->link->data);
         p = p->link;
     } while(p != L->tail);
-    
+    printf("\n");
 }
 
 int main() {
     ListType L; 
     init(&L);
 
-    insertLast(&L, 10); print(&L);
-    insertLast(&L, 20); print(&L);
-    insertLast(&L, 30); print(&L);
+    insertFirst(&L, 10); print(&L);
+    insertFirst(&L, 20); print(&L);
+    insertFirst(&L, 30); print(&L);
 
     insertLast(&L, 40); print(&L);
     insertLast(&L, 50); print(&L);
@@ -81,7 +81,6 @@ int main() {
 
     return 0;
 }
-
 
 
 
